@@ -5,6 +5,7 @@
 
 
 # useful for handling different item types with a single interface
+import json
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 
@@ -18,5 +19,21 @@ class BooksparserPipeline:
         adapter = ItemAdapter(item)
         collection.insert_one(adapter.asdict())
         
+        return item
+    
+class JsonWriterPipeline:
+    def open_spider(self, spider):
+        # Открытие файла для записи, добавление символа [
+        self.file = open("labirint_books.json", "w", encoding="utf8")
+        self.file.write("[")
 
+    def close_spider(self, spider):
+        # Завершаем файл JSON, добавляем символ ]
+        self.file.write("]")
+        self.file.close()
+
+    def process_item(self, item, spider):
+        # Преобразуем объект item в строку JSON
+        line = json.dumps(item, ensure_ascii=False, indent=4) + ",\n"
+        self.file.write(line)
         return item

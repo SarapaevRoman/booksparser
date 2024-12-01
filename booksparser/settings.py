@@ -66,6 +66,17 @@ COOKIES_ENABLED = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     "booksparser.pipelines.BooksparserPipeline": 300,
+    "booksparser.pipelines.JsonWriterPipeline": 400,
+}
+
+FEEDS = {
+    "labirint_books.json": {
+        "format": "json",
+        "encoding": "utf8",
+        "indent": 4,  
+        "store_empty": False,
+        "fields": ["title", "price", "annotation", "url"],  
+                },
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
